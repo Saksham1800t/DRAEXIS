@@ -8,6 +8,11 @@ import SelectOption from './_components/SelectOption'
 import { UserInputContext } from '@/app/_context/UserInputContext'
 import LoadingDialog from './_components/LoadingDialog'
 import { GenerateCourseLayout_AI } from '@/configs/AiModel'
+import { db } from '@/configs/db'
+import uuid4 from 'uuid4'
+import { useUser } from '@clerk/nextjs'
+import { CourseList } from '@/configs/schema'
+import { useRouter } from 'next/navigation'
 
 function CreateCourse() {
 
@@ -29,9 +34,11 @@ function CreateCourse() {
     },
   ]
 
+  const router = useRouter();
   const { userCourseInput, setUserCourseInput } = useContext(UserInputContext);
   const [loading, setLoading] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const { user } = useUser();
 
   useEffect(() => {
     console.log(userCourseInput);
@@ -48,7 +55,7 @@ function CreateCourse() {
     if (activeIndex == 1 && (userCourseInput?.topic?.length == 0 || userCourseInput?.topic == undefined)) {
       return true;
     }
-    else if(activeIndex==2 && (userCourseInput?.level?.length == 0 || userCourseInput?.level == undefined || userCourseInput?.duration?.length == 0 || userCourseInput?.duration == undefined || userCourseInput?.displayVideo?.length == 0 || userCourseInput?.displayVideo == undefined)){
+    else if (activeIndex == 2 && (userCourseInput?.level?.length == 0 || userCourseInput?.level == undefined || userCourseInput?.duration?.length == 0 || userCourseInput?.duration == undefined || userCourseInput?.displayVideo?.length == 0 || userCourseInput?.displayVideo == undefined)) {
       return true
     }
     return false
@@ -63,7 +70,26 @@ function CreateCourse() {
     const result = await GenerateCourseLayout_AI.sendMessage(FINAL_PROMPT);
     console.log(result.response?.text());
     console.log(JSON.parse(result.response?.text()));
-    setLoading(false)
+    setLoading(false);
+    SaveCourseLayoutInDb(JSON.parse(result.response?.text()));
+  }
+
+  const SaveCourseLayoutInDb = async (courseLayout) => {
+    var id = uuid4();
+    setLoading(true);
+    const result = await db.insert(CourseList).values({
+      courseId: id,
+      name: userCourseInput?.topic,
+      level: userCourseInput?.level,
+      category: userCourseInput?.category,
+      courseOutput: courseLayout,
+      createdBy: user?.primaryEmailAddress?.emailAddress,
+      userName: user?.fullName,
+      userProfileImage: user?.imageUrl
+    })
+    console.log("finish.");
+    setLoading(false);
+    router.replace('/create-course/' + id)
   }
 
   return (
