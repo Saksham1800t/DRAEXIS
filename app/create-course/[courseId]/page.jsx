@@ -32,7 +32,7 @@ function CourseLayout({ params: paramsPromise }) {
 
             {/* info */}
 
-            <CourseBasicInfo course={course} />
+            <CourseBasicInfo course={course} refreshData={() => GetCourse()} />
 
             {/* details */}
 
@@ -40,7 +40,7 @@ function CourseLayout({ params: paramsPromise }) {
 
             {/* lesson */}
 
-            <ChapterList course={course} />
+            <ChapterList course={course} refreshData={() => GetCourse()} />
 
         </div>
     )
