@@ -41,34 +41,37 @@ function CourseLayout({ params: paramsPromise }) {
             const PROMPT = 'Explain the concept in Detail on Topic:' + course?.name + ',Chapter:' + chapter?.ChapterName + ' in JSON Format with list of array with field as title, explanation on given chapter in detail, Code Example(Code field in <precode> format)if applicable';
             console.log(PROMPT);
             // if (index < 3) {
-                try {
+            try {
 
-                    // generateVideo
-                    let videoId = '';
-                    service.getVideos(course?.name + ':' + chapter?.ChapterName).then(res => {
-                        console.log(res);
-                        videoId = res[0]?.id?.videoId
-                    })
+                // generateVideo
+                let videoId = '';
+                service.getVideos(course?.name + ':' + chapter?.ChapterName).then(res => {
+                    console.log(res);
+                    videoId = res[0]?.id?.videoId
+                })
 
-                    // generateContent
-                    const result = await GenerateChapterContent_AI.sendMessage(PROMPT);
-                    console.log(result?.response?.text());
-                    const content = JSON.parse(result?.response?.text())
+                // generateContent
+                const result = await GenerateChapterContent_AI.sendMessage(PROMPT);
+                console.log(result?.response?.text());
+                const content = JSON.parse(result?.response?.text())
 
-                    // saveContent
-                    await db.insert(Chapters).values({
-                        chapterId: index,
-                        courseId: course?.courseId,
-                        content: content,
-                        videoId: videoId
-                    })
+                // saveContent
+                await db.insert(Chapters).values({
+                    chapterId: index,
+                    courseId: course?.courseId,
+                    content: content,
+                    videoId: videoId
+                })
 
-                    setLoading(false);
-                } catch (error) {
-                    setLoading(false)
-                    console.log(error);
-                }
-                router.replace('/create-course/' + course?.courseId + '/finish')
+                setLoading(false);
+            } catch (error) {
+                setLoading(false)
+                console.log(error);
+            }
+            await db.update(CourseList).set({ 
+                publish: true
+            })
+            router.replace('/create-course/' + course?.courseId + '/finish')
             // }
         })
     }
