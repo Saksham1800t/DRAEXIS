@@ -1,12 +1,16 @@
 "use client"
-import React from 'react'
+import React, { useContext } from 'react'
 import Image from 'next/image'
 import { HiOutlineHome, HiOutlineSquare3Stack3D, HiOutlineShieldCheck, HiOutlinePower } from "react-icons/hi2";
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Progress } from "@/components/ui/progress"
+import { UserCourseListContext } from '@/app/_context/UserCourseListContext';
 
 function SideBar() {
+
+    const { userCourseList, setUserCourseList } = useContext(UserCourseListContext);
+
     const Menu = [
         {
             id: 1,
@@ -22,12 +26,6 @@ function SideBar() {
         },
         {
             id: 3,
-            name: 'Upgrade',
-            icon: <HiOutlineShieldCheck />,
-            path: '/dashboard/upgrade'
-        },
-        {
-            id: 4,
             name: 'Logout',
             icon: <HiOutlinePower />,
             path: '/dashboar/logout'
@@ -52,8 +50,8 @@ function SideBar() {
             </ul>
 
             <div className='absolute bottom-10 w-[80%]'>
-                <Progress value={33} />
-                <h2 className='text-sm my-2'>3 out of 5 course created</h2>
+                <Progress value={(userCourseList?.length / 5) * 100} />
+                <h2 className='text-sm my-2'>{userCourseList?.length} out of 5 course created</h2>
                 <h2 className='text-xs text-gray-500'>upgrade your plan for unlimited course genrator</h2>
             </div>
 

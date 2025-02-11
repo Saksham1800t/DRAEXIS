@@ -3,11 +3,13 @@ import { db } from '@/configs/db';
 import { CourseList } from '@/configs/schema';
 import { useUser } from '@clerk/nextjs'
 import { eq } from 'drizzle-orm';
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import CourseCard from './CourseCard';
+import { UserCourseListContext } from '@/app/_context/UserCourseListContext';
 
 function UserCourseList() {
 
+  const { userCourseList, setUserCourseList } = useContext(UserCourseListContext);
   const [courseList, setCourseList] = useState([]);
   const { user } = useUser();
 
@@ -19,6 +21,7 @@ function UserCourseList() {
     const res = await db.select().from(CourseList)
       .where(eq(CourseList?.createdBy, user?.primaryEmailAddress?.emailAddress))
     setCourseList(res);
+    setUserCourseList(res);
   }
 
   return (

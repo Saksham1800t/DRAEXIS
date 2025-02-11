@@ -4,7 +4,7 @@ import { HiOutlineChartBar, HiOutlineClock, HiOutlineBookOpen, HiOutlinePlayCirc
 function CourseDetail({ course }) {
     return (
         <div className='border p-6 rounded-xl shadow-sm mt-3'>
-            <div className='grid grid-cols-2 md:grid-cols- gap-5'>
+            <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5'>
                 <div className='flex gap-2 items-center'>
                     <HiOutlineChartBar className='text-4xl text-blue-500' />
                     <div>

@@ -6,7 +6,7 @@ import { db } from "@/configs/db";
 import { CourseList } from "@/configs/schema";
 import { eq } from "drizzle-orm";
 
-function CourseBasicInfo({ course, refreshData }) {
+function CourseBasicInfo({ course, refreshData, edit = true }) {
     const [selectedFile, setSelectedFile] = useState(null);
     const [uploading, setUploading] = useState(false);
     const [imageUrl, setImageUrl] = useState("");
@@ -78,7 +78,7 @@ function CourseBasicInfo({ course, refreshData }) {
 
             setImageUrl(url);
 
-          
+
             refreshData();
         } catch (error) {
             console.error("Error updating database:", error);
@@ -91,7 +91,7 @@ function CourseBasicInfo({ course, refreshData }) {
                 <div>
                     <h2 className="font-bold text-2xl">
                         {course?.courseOutput?.CourseName}{" "}
-                        <EditCourseInfo course={course} refreshData={() => refreshData(true)} />
+                        {edit&& <EditCourseInfo course={course} refreshData={() => refreshData(true)} />}
                     </h2>
                     <p className="text-sm text-gray-400 mt-3">{course?.courseOutput?.Description}</p>
                     <h2 className="font-medium mt-2 flex gap-2 items-center text-blue-500">
@@ -109,8 +109,8 @@ function CourseBasicInfo({ course, refreshData }) {
                             className="w-full rounded-xl h-[250px] object-cover cursor-pointer"
                         />
                     </label>
-                    <input type="file" id="upload-image" className="opacity-0" onChange={onFileSelected} />
-                    {uploading && <p className="text-blue-500 mt-2">Uploading...</p>}
+                   {edit && <input type="file" id="upload-image" className="opacity-0" onChange={onFileSelected} />}
+                    {uploading && <p className="text-blue-500 mt-2">Uploading...</p>} 
                 </div>
             </div>
         </div>

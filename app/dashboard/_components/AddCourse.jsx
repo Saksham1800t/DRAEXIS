@@ -1,8 +1,9 @@
 "use client"
-import React from 'react'
+import React, { useContext } from 'react'
 import { useUser } from '@clerk/nextjs'
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { UserCourseListContext } from '@/app/_context/UserCourseListContext';
 
 function AddCourse() {
 
