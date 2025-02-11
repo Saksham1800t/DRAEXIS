@@ -1,6 +1,6 @@
 "use client"
 import { Button } from '@/components/ui/button'
-import React, { use, useContext, useEffect, useState } from 'react'
+import React, { use, useContext, useState } from 'react'
 import { HiClipboardDocumentCheck, HiLightBulb, HiMiniSquares2X2 } from 'react-icons/hi2'
 import SelectCategory from './_components/SelectCategory'
 import TopicDescription from './_components/TopicDescription'
@@ -39,11 +39,6 @@ function CreateCourse() {
   const [loading, setLoading] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const { user } = useUser();
-
-  useEffect(() => {
-    console.log(userCourseInput);
-
-  }, [userCourseInput])
 
   const checkStatus = () => {
     if (userCourseInput?.length == 0) {
@@ -101,15 +96,24 @@ function CreateCourse() {
             {stepper.map((item, index) => (
               <div key={item.id} className='flex items-center'>
                 <div className='flex flex-col items-center w-[50px] md:w-[100px]'>
-                  <div className={`bg-gray-200 p-3 rounded-full text-white ${activeIndex >= index && 'bg-blue-500'}`}>
+                  <div
+                    className={`p-3 rounded-full text-white transition-all duration-300 ${activeIndex >= index ? 'bg-blue-500' : 'bg-gray-200'
+                      }`}
+                  >
                     {item.icon}
                   </div>
                   <h2 className='hidden md:block md:text-sm'>{item.name}</h2>
                 </div>
-                {index != stepper?.length - 1 && <div className={`h-1 w-[50px] md:w-[100px] rounded-full lg:w-[170px] bg-gray-200 ${activeIndex - 1 >= index && 'bg-blue-500'}`}></div>}
+                {index !== stepper.length - 1 && (
+                  <div
+                    className={`h-1 w-[50px] md:w-[100px] rounded-full lg:w-[170px] transition-all duration-300 ${activeIndex > index ? 'bg-blue-500' : 'bg-gray-200'
+                      }`}
+                  ></div>
+                )}
               </div>
             ))}
           </div>
+
         </div>
         <div className='px-10 md:px-20 lg:px-44 mt-10'>
           {/* {component} */}
