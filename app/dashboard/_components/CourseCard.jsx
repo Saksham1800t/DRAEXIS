@@ -19,7 +19,7 @@ function CourseCard({ course, refreshData }) {
     const handleDelete = async () => {
         const res = await db.delete(CourseList).where(eq(CourseList.id, course?.id))
             .returning({ id: CourseList?.id })
-
+ 
         if (res) {
             refreshData()
         }

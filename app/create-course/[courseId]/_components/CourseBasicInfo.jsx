@@ -5,6 +5,7 @@ import EditCourseInfo from "./EditCourseInfo";
 import { db } from "@/configs/db";
 import { CourseList } from "@/configs/schema";
 import { eq } from "drizzle-orm";
+import Link from "next/link";
 
 function CourseBasicInfo({ course, refreshData, edit = true }) {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -91,13 +92,15 @@ function CourseBasicInfo({ course, refreshData, edit = true }) {
                 <div>
                     <h2 className="font-bold text-2xl">
                         {course?.courseOutput?.CourseName}{" "}
-                        {edit&& <EditCourseInfo course={course} refreshData={() => refreshData(true)} />}
+                        {edit && <EditCourseInfo course={course} refreshData={() => refreshData(true)} />}
                     </h2>
                     <p className="text-sm text-gray-400 mt-3">{course?.courseOutput?.Description}</p>
                     <h2 className="font-medium mt-2 flex gap-2 items-center text-blue-500">
                         Category: {course?.courseOutput?.Category}
                     </h2>
-                    <Button className="mt-5 w-full">Start</Button>
+                    {!edit && <Link href={'/course/' + course?.courseId + '/start'}>
+                        <Button className="mt-5 w-full">Start</Button>
+                    </Link>}
                 </div>
                 <div>
                     <label htmlFor="upload-image">
@@ -109,8 +112,8 @@ function CourseBasicInfo({ course, refreshData, edit = true }) {
                             className="w-full rounded-xl h-[250px] object-cover cursor-pointer"
                         />
                     </label>
-                   {edit && <input type="file" id="upload-image" className="opacity-0" onChange={onFileSelected} />}
-                    {uploading && <p className="text-blue-500 mt-2">Uploading...</p>} 
+                    {edit && <input type="file" id="upload-image" className="opacity-0" onChange={onFileSelected} />}
+                    {uploading && <p className="text-blue-500 mt-2">Uploading...</p>}
                 </div>
             </div>
         </div>

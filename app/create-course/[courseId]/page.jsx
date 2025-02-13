@@ -34,47 +34,78 @@ function CourseLayout({ params: paramsPromise }) {
 
     }
 
-    const GenerateChapterContent = () => {
+    const GenerateChapterContent = async () => {
+        if (!course?.courseOutput?.Chapters) return;
+
         setLoading(true);
-        const chapters = course?.courseOutput?.Chapters;
-        chapters.forEach(async (chapter, index) => {
-            const PROMPT = 'Explain the concept in Detail on Topic:' + course?.name + ',Chapter:' + chapter?.ChapterName + ' in JSON Format with list of array with field as title, explanation on given chapter in detail, Code Example(Code field in <precode> format)if applicable';
-            console.log(PROMPT);
-            // if (index < 3) {
-            try {
 
-                // generateVideo
+        try {
+            const processedChapters = new Set();
+            const chapters = course.courseOutput.Chapters;
+
+            for (const [index, chapter] of chapters.entries()) {
+                // Avoid regenerating content for the same chapter
+                if (processedChapters.has(chapter.ChapterName)) continue;
+                processedChapters.add(chapter.ChapterName);
+
+                const PROMPT = `Explain the concept in Detail on Topic: ${course?.name}, Chapter: ${chapter?.ChapterName} in JSON Format with a list of arrays with fields as title, explanation on given chapter in detail, and Code Example (Code field in <precode> format) if applicable`;
+
+                console.log("Generating content for:", chapter.ChapterName);
+
+                // Generate video
                 let videoId = '';
-                service.getVideos(course?.name + ':' + chapter?.ChapterName).then(res => {
-                    console.log(res);
-                    videoId = res[0]?.id?.videoId
-                })
+                try {
+                    const res = await service.getVideos(`${course?.name}:${chapter?.ChapterName}`);
+                    videoId = res[0]?.id?.videoId || '';
+                } catch (videoError) {
+                    console.log('Video generation error:', videoError);
+                }
 
-                // generateContent
-                const result = await GenerateChapterContent_AI.sendMessage(PROMPT);
-                console.log(result?.response?.text());
-                const content = JSON.parse(result?.response?.text())
+                // Generate content
+                let content = null;
+                try {
+                    const result = await GenerateChapterContent_AI.sendMessage(PROMPT);
+                    const responseText = await result?.response?.text();
+                    content = safeJsonParse(responseText);
+                } catch (jsonError) {
+                    console.error("JSON Parsing Error:", jsonError);
+                    continue;
+                }
 
-                // saveContent
+                if (!content) continue;
+
+                // Save content
                 await db.insert(Chapters).values({
                     chapterId: index,
                     courseId: course?.courseId,
                     content: content,
                     videoId: videoId
-                })
+                });
 
-                setLoading(false);
-            } catch (error) {
-                setLoading(false)
-                console.log(error);
+                console.log(`Chapter ${chapter.ChapterName} content saved successfully.`);
             }
-            await db.update(CourseList).set({ 
-                publish: true
-            })
-            router.replace('/create-course/' + course?.courseId + '/finish')
-            // }
-        })
-    }
+
+            // Mark course as published
+            await db.update(CourseList).set({ publish: true });
+
+            // Redirect
+            router.replace(`/create-course/${course?.courseId}/finish`);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Utility function to handle JSON parsing safely
+    const safeJsonParse = (str) => {
+        try {
+            return JSON.parse(str);
+        } catch (error) {
+            console.error("Invalid JSON Format:", error.message);
+            return null;
+        }
+    };
 
     return (
         <div className='mt-10 px-7 md:px-20 lg:px-44'>
