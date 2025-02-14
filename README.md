@@ -1,4 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🚀 DRAEXIS - AI-Powered Course Generator
+
+DRAEXIS is a Full Stack AI-powered Course Generator that creates personalized courses based on user preferences. It integrates **Gemini API** for AI-generated content, **YouTube API** for video recommendations, **Clerk** for authentication, and **Drizzle** for database management.
+
+## ✨ Features
+- 🔥 AI-powered course creation using **Gemini API**.
+- 🎥 Fetch relevant course videos via **YouTube API**.
+- 🔐 Secure authentication with **Clerk**.
+- 🗂️ Database management using **Drizzle**.
+- ⚡ Built with **Next.js, React, TailwindCSS**.
+- 📊 User-friendly dashboard for tracking progress.
+
+---
+
+## 🛠️ Tech Stack
+- **Frontend**: Next.js, React, TailwindCSS
+- **Backend**: Next.js API Routes
+- **Authentication**: Clerk
+- **Database**: Drizzle ORM with PostgreSQL/MongoDB (choose as needed)
+- **APIs**: Gemini AI, YouTube API
+- **Hosting**: Vercel
+
+---
+
+## 🚀 Getting Started
+
+### 1️⃣ Clone the Repository
+```bash
+git clone https://github.com/Saksham1800t/DRAEXIS.git
+cd draexis
+
 
 ## Getting Started
 
