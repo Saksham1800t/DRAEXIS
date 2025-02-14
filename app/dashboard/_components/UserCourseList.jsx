@@ -30,7 +30,7 @@ function UserCourseList() {
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
         {courseList?.length > 0 ? courseList?.map((course, index) => (
           <CourseCard course={course} key={index} refreshData={() => getUserCourse()} />
-        ))
+        )) 
           :
           [1, 2, 3, 4, 5].map((item, index) => (
             <div key={index} className='w-full mt-5 bg-slate-200 animate-pulse rounded-lg h-[260px]'>

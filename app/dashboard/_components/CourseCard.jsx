@@ -2,11 +2,6 @@ import Image from 'next/image'
 import React from 'react'
 import { HiOutlineBookOpen } from 'react-icons/hi2'
 import { HiMiniEllipsisVertical } from 'react-icons/hi2';
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
 import DropDownOption from './DropDownOption';
 import { db } from '@/configs/db';
 import { CourseList } from '@/configs/schema';

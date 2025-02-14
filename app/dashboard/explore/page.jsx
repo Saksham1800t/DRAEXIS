@@ -26,11 +26,15 @@ function Explore() {
       <p>Explore more projects build by AI by other users</p>
 
       <div className='grid grid-cols-2 lg:grid-cols-3 gap-5'>
-        {courseList?.map((course, index) => (
-          <div>
+        {courseList?.length > 0 ? courseList?.map((course, index) => (
+          <div key={index}>
             <CourseCard course={course} displayUser={true} />
           </div>
-        ))}
+        )) :
+          [1, 2, 3].map((item, index) => (
+            <div key={index} className='w-full mt-5 bg-slate-200 animate-pulse rounded-lg h-[260px]'>
+            </div>
+          ))}
       </div>
 
       <div className='flex justify-between mt-5'>
